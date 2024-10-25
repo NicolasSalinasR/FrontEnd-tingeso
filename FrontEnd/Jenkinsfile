@@ -37,7 +37,7 @@ pipeline {
         stage('Push Image to Docker Hub') {
             steps {
                 withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_HUB_PASSWORD')]) {
-                    bat 'echo %DOCKER_HUB_PASSWORD% | docker login -u haruhisomu --password-stdin'
+                    bat 'docker login -u haruhisomu -p %DOCKER_HUB_PASSWORD%'
                 }
                 bat 'docker push haruhisomu/frontend:latest'
             }
