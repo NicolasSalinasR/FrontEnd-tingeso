@@ -36,9 +36,9 @@ pipeline {
                 dir('FrontEnd') { // Cambia al directorio FrontEnd
                     script {
                         withCredentials([string(credentialsId: 'dockerPass', variable: 'dhpsw')]) {
-                            bat 'docker login -u haruHisomu -p %dhpsw% || exit 1'
+                            bat 'docker login -u haruHisomu -p %dhpsw% || exit 1' // Login en Docker Hub
                         }
-                        bat 'docker push haruHisomu/frontend:latest || exit 1'
+                        bat 'docker push haruHisomu/frontend:latest || exit 1' // Empuja la imagen a Docker Hub
                     }
                 }
             }
