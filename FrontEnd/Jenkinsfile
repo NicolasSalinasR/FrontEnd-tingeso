@@ -7,31 +7,39 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 checkout scm // Utiliza la configuración de SCM del proyecto
-                bat 'npm install || exit 1' // Usa 'bat' para Windows
+                dir('FrontEnd') { // Cambia al directorio FrontEnd
+                    bat 'npm install || exit 1' // Usa 'bat' para Windows
+                }
             }
         }
 
         stage('Build Project') {
             steps {
-                bat 'npm run build || exit 1' // Genera la versión de producción del frontend
+                dir('FrontEnd') { // Cambia al directorio FrontEnd
+                    bat 'npm run build || exit 1' // Genera la versión de producción del frontend
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    bat 'docker build -t haruHisomu/frontend:latest . || exit 1' // Construye la imagen Docker
+                dir('FrontEnd') { // Cambia al directorio FrontEnd
+                    script {
+                        bat 'docker build -t haruHisomu/frontend:latest . || exit 1' // Construye la imagen Docker
+                    }
                 }
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'dockerPass', variable: 'dhpsw')]) {
-                        bat 'docker login -u haruHisomu -p %dhpsw% || exit 1'
+                dir('FrontEnd') { // Cambia al directorio FrontEnd
+                    script {
+                        withCredentials([string(credentialsId: 'dockerPass', variable: 'dhpsw')]) {
+                            bat 'docker login -u haruHisomu -p %dhpsw% || exit 1'
+                        }
+                        bat 'docker push haruHisomu/frontend:latest || exit 1'
                     }
-                    bat 'docker push haruHisomu/frontend:latest || exit 1'
                 }
             }
         }
