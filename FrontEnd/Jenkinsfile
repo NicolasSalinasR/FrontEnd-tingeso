@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    tools {
+        nodejs 'nodejs_20_12_2' // Configura la versión de Node.js instalada en Jenkins
+    }
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/NicolasSalinasR/FrontEnd-tingeso']])
+                bat 'npm install' // Usa 'bat' para Windows o 'sh' para Linux/Mac
+            }
+        }
+
+        stage('Build Project') {
+            steps {
+                bat 'npm run build' // Genera la versión de producción del frontend
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    bat 'docker build -t haruHisomu/frontend:latest .' // Construye la imagen Docker
+                }
+            }
+        }
+
+        stage('Push Image to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'dockerPass', variable: 'dhpsw')]) {
+                        bat 'docker login -u haruHisomu -p %dhpsw%'
+                    }
+                    bat 'docker push haruHisomu/frontend:latest'
+                }
+            }
+        }
+    }
+}
