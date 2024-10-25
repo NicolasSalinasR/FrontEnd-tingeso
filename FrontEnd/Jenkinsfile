@@ -6,21 +6,21 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/NicolasSalinasR/FrontEnd-tingeso']])
-                bat 'npm install' // Usa 'bat' para Windows o 'sh' para Linux/Mac
+                checkout scm // Utiliza la configuración de SCM del proyecto
+                bat 'npm install || exit 1' // Usa 'bat' para Windows
             }
         }
 
         stage('Build Project') {
             steps {
-                bat 'npm run build' // Genera la versión de producción del frontend
+                bat 'npm run build || exit 1' // Genera la versión de producción del frontend
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat 'docker build -t haruHisomu/frontend:latest .' // Construye la imagen Docker
+                    bat 'docker build -t haruHisomu/frontend:latest . || exit 1' // Construye la imagen Docker
                 }
             }
         }
@@ -29,9 +29,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'dhpsw')]) {
-                        bat 'docker login -u haruHisomu -p %dhpsw%'
+                        bat 'docker login -u haruHisomu -p %dhpsw% || exit 1'
                     }
-                    bat 'docker push haruHisomu/frontend:latest'
+                    bat 'docker push haruHisomu/frontend:latest || exit 1'
                 }
             }
         }
