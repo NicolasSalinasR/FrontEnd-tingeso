@@ -8,7 +8,7 @@ function Home() {
 
   return (
     <div className="container text-center mt-5">
-      <h1>Bienvenido a Presta Facil, Su banco de confianza, HOLA POFESOR ALCIDEZ</h1>
+      <h1>Bienvenido a Presta Facil, Su banco de confianza</h1>
       <p>Seleccione una opción:</p>
       <div className="d-grid gap-2 col-6 mx-auto mt-4">
         
