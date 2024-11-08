@@ -67,7 +67,7 @@ const LoanSimulator = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Simular</button>
+                <button type="submit" className="btn btn-primary">Simular Credito</button>
             </form>
 
             {result !== null && (
