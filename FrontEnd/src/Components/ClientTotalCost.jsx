@@ -11,12 +11,40 @@ const TotalCostSimulator = () => {
     const [comision, setComision] = useState('');
     const [result, setResult] = useState(null);
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Inicializa useNavigate
+    const navigate = useNavigate();
+
+    const validateInputs = () => {
+        if (Number(amount) <= 0 || !Number.isInteger(Number(amount))) {
+            return "Monto debe ser un entero mayor a cero.";
+        }
+        if (Number(termYears) <= 0 || !Number.isInteger(Number(termYears))) {
+            return "Años del préstamo debe ser un entero mayor a cero.";
+        }
+        if (Number(annualInterest) <= 0) {
+            return "Tasa de interés anual debe ser un número decimal mayor a cero.";
+        }
+        if (Number(seguroDegrabacion) <= 0 || !Number.isInteger(Number(seguroDegrabacion))) {
+            return "Seguro de Grabación debe ser un entero mayor a cero.";
+        }
+        if (Number(seguroIncendio) <= 0 || !Number.isInteger(Number(seguroIncendio))) {
+            return "Seguro Incendio debe ser un entero mayor a cero.";
+        }
+        if (Number(comision) <= 0 || !Number.isInteger(Number(comision))) {
+            return "Comisión debe ser un entero mayor a cero.";
+        }
+        return null;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setResult(null);
+
+        const validationError = validateInputs();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
 
         try {
             const response = await clientService.totalCost({
@@ -35,12 +63,12 @@ const TotalCostSimulator = () => {
     };
 
     const handleNavigate = () => {
-        navigate('/home/Client'); // Cambia '/ruta-deseada' a la ruta a la que quieres navegar
+        navigate('/home/Client');
     };
 
     return (
         <div className="container mt-5">
-            <h2>Calculadora de costos de tu prestamo</h2>
+            <h2>Calculadora de costos de tu préstamo</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>Monto:</label>
@@ -77,7 +105,6 @@ const TotalCostSimulator = () => {
                     <label>Seguro de Grabación:</label>
                     <input
                         type="number"
-                        step="0.01"
                         className="form-control"
                         value={seguroDegrabacion}
                         onChange={(e) => setSeguroDegrabacion(e.target.value)}
@@ -88,7 +115,6 @@ const TotalCostSimulator = () => {
                     <label>Seguro Incendio:</label>
                     <input
                         type="number"
-                        step="0.01"
                         className="form-control"
                         value={seguroIncendio}
                         onChange={(e) => setSeguroIncendio(e.target.value)}
@@ -99,7 +125,6 @@ const TotalCostSimulator = () => {
                     <label>Comisión:</label>
                     <input
                         type="number"
-                        step="0.01"
                         className="form-control"
                         value={comision}
                         onChange={(e) => setComision(e.target.value)}
@@ -121,9 +146,8 @@ const TotalCostSimulator = () => {
                 </div>
             )}
 
-            {/* Botón para navegar a otra ruta */}
             <button className="btn btn-secondary mt-3" onClick={handleNavigate}>
-                Ir a otra ruta
+                Volver a Inicio
             </button>
         </div>
     );

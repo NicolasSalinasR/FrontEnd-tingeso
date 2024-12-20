@@ -4,12 +4,28 @@ import { useLocation } from "react-router-dom"; // Importa useLocation para acce
 
 const UpdateStageForm = () => {
     const location = useLocation(); // Obtener el estado pasado
-    const { id, clientId, stage: initialStage } = location.state; // Extraer el id, clientId y el stage inicial del estado
+    const { id, clientId, stage: initialStage } = location.state || {}; // Extraer id, clientId y el stage inicial
     const [stage, setStage] = useState(initialStage || ''); // Inicializar el estado del stage con el valor recibido
     const [message, setMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validar que los valores sean números enteros y mayores a cero
+        if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
+            setMessage('El ID de la solicitud debe ser un número entero mayor a 0.');
+            return;
+        }
+
+        if (!Number.isInteger(Number(clientId)) || Number(clientId) <= 0) {
+            setMessage('El ID del cliente debe ser un número entero mayor a 0.');
+            return;
+        }
+
+        if (!Number.isInteger(Number(stage)) || Number(stage) <= 0) {
+            setMessage('El Stage debe ser un número entero mayor a 0.');
+            return;
+        }
 
         try {
             const body = {
@@ -21,9 +37,9 @@ const UpdateStageForm = () => {
             setMessage(response.data);
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                setMessage('Request not found!');
+                setMessage('Solicitud no encontrada.');
             } else {
-                setMessage('Error updating stage');
+                setMessage('Error al actualizar la etapa.');
             }
         }
     };
