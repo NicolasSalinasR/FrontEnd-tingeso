@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom"; // Importa useLocation para acce
 
 const UpdateStageForm = () => {
     const location = useLocation(); // Obtener el estado pasado
-    const { id, clientId, stage: initialStage } = location.state || {}; // Extraer id, clientId y el stage inicial
+    const { id, clientId, stage: initialStage } = location.state; // Extraer el id, clientId y el stage inicial del estado
     const [stage, setStage] = useState(initialStage || ''); // Inicializar el estado del stage con el valor recibido
     const [message, setMessage] = useState('');
 
@@ -13,12 +13,12 @@ const UpdateStageForm = () => {
 
         // Validar que los valores sean números enteros y mayores a cero
         if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-            setMessage('El ID de la solicitud debe ser un número entero mayor a 0.');
+            setMessage('ID de la solicitud debe ser un número entero mayor a 0.');
             return;
         }
 
         if (!Number.isInteger(Number(clientId)) || Number(clientId) <= 0) {
-            setMessage('El ID del cliente debe ser un número entero mayor a 0.');
+            setMessage('ID del cliente debe ser un número entero mayor a 0.');
             return;
         }
 
@@ -37,9 +37,9 @@ const UpdateStageForm = () => {
             setMessage(response.data);
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                setMessage('Solicitud no encontrada.');
+                setMessage('Request not found!');
             } else {
-                setMessage('Error al actualizar la etapa.');
+                setMessage('Error updating stage');
             }
         }
     };
