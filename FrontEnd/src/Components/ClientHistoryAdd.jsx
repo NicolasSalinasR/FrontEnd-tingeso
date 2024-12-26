@@ -21,11 +21,6 @@ const HistoryAddClient = () => {
       return;
     }
 
-    // Validar que clientid sea un número entero mayor a 0
-    if (!Number.isInteger(Number(clientid)) || Number(clientid) <= 0) {
-      alert("Client ID debe ser un número entero mayor a 0.");
-      return;
-    }
 
     // Validar que change sea un número entero
     if (!Number.isInteger(Number(change))) {
@@ -34,7 +29,6 @@ const HistoryAddClient = () => {
     }
 
     const data = {
-      clientid: Number(clientid), // Convertir a número
       change: Number(change), // Convertir a número
     };
 
@@ -59,7 +53,7 @@ const HistoryAddClient = () => {
       <h3>Nueva entrada de historial</h3>
       <FormControl fullWidth>
         <TextField
-          label="Client ID"
+          label="Rut"
           value={clientid}
           variant="standard"
           onChange={(e) => setClientid(e.target.value)}

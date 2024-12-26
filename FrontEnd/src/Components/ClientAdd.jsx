@@ -22,10 +22,10 @@ const AddEditClient = () => {
   const [dicom, setDicom] = useState(false);
   const { id } = useParams();
   const [titleForm, setTitleForm] = useState("");
-  const [notification, setNotification] = useState({ open: false, message: "" });
+  const [notification, setNotification] = useState({ open: false, message: "", severity: "success" });
   const navigate = useNavigate();
 
-  const handleCloseNotification = () => setNotification({ open: false, message: "" });
+  const handleCloseNotification = () => setNotification({ open: false, message: "", severity: "success" });
 
   const validateFields = () => {
     if (!rut || !email || !password || !firstName || !lastname) {
@@ -34,6 +34,7 @@ const AddEditClient = () => {
     if (age <= 0) return "La edad debe ser mayor a cero.";
     if (salary <= 0) return "El salario debe ser mayor a cero.";
     if (jobTenure <= 0) return "La antigüedad laboral debe ser mayor a cero.";
+    if (rut <= 0) return "El rut debe ser un valor mayor a cero.";
     return null; // Todo está correcto
   };
 
@@ -42,7 +43,7 @@ const AddEditClient = () => {
     const error = validateFields();
 
     if (error) {
-      setNotification({ open: true, message: error });
+      setNotification({ open: true, message: error, severity: "error" });
       return;
     }
 
@@ -61,10 +62,13 @@ const AddEditClient = () => {
     clientService
       .create(client)
       .then((response) => {
-        console.log("Cliente creado", response.data);
-        navigate("/home/Client");
+        setNotification({ open: true, message: "Cuenta creada exitosamente.", severity: "success" });
+        setTimeout(() => navigate("/home/Client"), 2000); // Redirigir después de 2 segundos
       })
-      .catch((error) => console.log("Error al crear cliente", error));
+      .catch((error) => {
+        setNotification({ open: true, message: "Error al crear la cuenta.", severity: "error" });
+        console.error("Error al crear cliente", error);
+      });
   };
 
   useEffect(() => {
@@ -95,7 +99,7 @@ const AddEditClient = () => {
       <h3>{titleForm}</h3>
       <hr />
       <FormControl fullWidth>
-        <TextField label="Rut" value={rut} variant="standard" onChange={(e) => setRut(e.target.value)} helperText="Ej. 12.587.698-8" />
+        <TextField label="Rut" type="number" value={rut} variant="standard" onChange={(e) => setRut(e.target.value)} helperText="Ej. 12587698" />
       </FormControl>
 
       <FormControl fullWidth>
@@ -115,13 +119,7 @@ const AddEditClient = () => {
       </FormControl>
 
       <FormControl fullWidth>
-        <TextField
-          label="Edad"
-          type="number"
-          value={age}
-          variant="standard"
-          onChange={(e) => setAge(e.target.value)}
-        />
+        <TextField label="Edad" type="number" value={age} variant="standard" onChange={(e) => setAge(e.target.value)} />
       </FormControl>
 
       <FormControl fullWidth>
@@ -166,14 +164,14 @@ const AddEditClient = () => {
       <hr />
       <Link to="/home/Client">Volver a la lista</Link>
 
-      {/* Notificación de error */}
+      {/* Notificación de feedback */}
       <Snackbar
         open={notification.open}
         autoHideDuration={6000}
         onClose={handleCloseNotification}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseNotification} severity="error" sx={{ width: "100%" }}>
+        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: "100%" }}>
           {notification.message}
         </Alert>
       </Snackbar>

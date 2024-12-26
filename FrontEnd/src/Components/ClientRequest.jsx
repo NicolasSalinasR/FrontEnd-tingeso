@@ -43,7 +43,7 @@ const ClientRequest = () => {
             newErrors.termYears = "Los años del plazo deben ser un número entero mayor a cero.";
         }
         if (!Number.isInteger(Number(formData.clientId)) || Number(formData.clientId) <= 0) {
-            newErrors.clientId = "El ID del cliente debe ser un número entero mayor a cero.";
+            newErrors.clientId = "El Run del cliente debe ser solo numerico (no incluya puntos ni guion).";
         }
         if (!formData.pdfFile || formData.pdfFile.type !== 'application/pdf') {
             newErrors.pdfFile = "Debes subir un archivo en formato PDF.";
@@ -102,7 +102,7 @@ const ClientRequest = () => {
                         <label htmlFor={field} className="form-label">
                             {field === 'stage' ? 'Etapa' : 
                              field === 'Amount' ? 'Monto' : 
-                             field === 'termYears' ? 'Años del Plazo' : 'ID del Cliente'}
+                             field === 'termYears' ? 'Años del Plazo' : 'Run del Cliente'}
                         </label>
                         <input
                             type="number"

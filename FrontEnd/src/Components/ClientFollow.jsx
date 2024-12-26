@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa el hook useNavigate para navegación
 import requestService from '../Service/Request.service';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const RequestTable = () => {
     const [clientId, setClientId] = useState('');
     const [requests, setRequests] = useState([]);
+    const navigate = useNavigate(); // Inicializa el hook para navegación
 
     const handleSearch = async () => {
         try {
             // Realiza la solicitud al backend para obtener las solicitudes por ClientId
-            const response = await requestService.getAllRequestByClientId({ ClientId: clientId });
+            const response = await requestService.getAllRequestByClientId({ rut: clientId });
             setRequests(response.data);
         } catch (error) {
             console.error('Error al obtener las solicitudes', error);
@@ -19,7 +21,7 @@ const RequestTable = () => {
 
     // Función para obtener la descripción basada en el Stage
     const getDescriptionForStage = (stage) => {
-        switch(stage) {
+        switch (stage) {
             case 1:
                 return 'E1. En Revisión Inicial.';
             case 2:
@@ -29,32 +31,35 @@ const RequestTable = () => {
             case 4:
                 return 'E4. Pre-Aprobada.';
             case 5:
-                return 'E5. En Aprobación Final.';    
+                return 'E5. En Aprobación Final.';
             case 6:
-                return 'E6. Aprobada. ';   
+                return 'E6. Aprobada. ';
             case 7:
-                return 'E7. Rechazada. ';  
+                return 'E7. Rechazada. ';
             case 8:
-                return 'E8. Cancelada por el Cliente. ';    
-
+                return 'E8. Cancelada por el Cliente. ';
             case 9:
-                return 'E9. En Desembolso. '; 
+                return 'E9. En Desembolso. ';
             default:
                 return 'Si aparece este mensaje contacte con un ejecutivo del banco';
         }
     };
 
+    const handleBackToMenu = () => {
+        navigate('/home/Client'); // Navega a la ruta del menú anterior
+    };
+
     return (
-        <div className="container mt-5 d-flex justify-content-center">
+        <div className="container mt-5 d-flex flex-column align-items-center">
             <div className="w-75">
-                <h2 className="text-center mb-4">Buscar Solicitudes por ClientId</h2>
+                <h2 className="text-center mb-4">Revisar el estado de su préstamo</h2>
                 <div className="input-group mb-3">
                     <input
                         type="text"
                         className="form-control"
                         value={clientId}
                         onChange={(e) => setClientId(e.target.value)}
-                        placeholder="Ingrese el ClientId del cliente"
+                        placeholder="Ingrese su rut sin puntos ni guion"
                     />
                     <div className="input-group-append">
                         <button className="btn btn-primary" onClick={handleSearch}>
@@ -70,7 +75,7 @@ const RequestTable = () => {
                                 <th>Id</th>
                                 <th>ClientId</th>
                                 <th>Stage</th>
-                                <th>Descripción</th> {/* Nueva columna para la descripción */}
+                                <th>Descripción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,7 +84,7 @@ const RequestTable = () => {
                                     <td>{request.id}</td>
                                     <td>{request.clientId}</td>
                                     <td>{request.stage}</td>
-                                    <td>{getDescriptionForStage(request.stage)}</td> {/* Mostrar la descripción */}
+                                    <td>{getDescriptionForStage(request.stage)}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -87,6 +92,12 @@ const RequestTable = () => {
                 ) : (
                     <p className="text-center">No se encontraron solicitudes para este cliente.</p>
                 )}
+
+                <div className="mt-3 text-center">
+                    <button className="btn btn-secondary" onClick={handleBackToMenu}>
+                        Volver al Menú Anterior
+                    </button>
+                </div>
             </div>
         </div>
     );
