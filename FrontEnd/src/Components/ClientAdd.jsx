@@ -9,6 +9,10 @@ import SaveIcon from "@mui/icons-material/Save";
 import MenuItem from "@mui/material/MenuItem";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Dropdown from "react-bootstrap/Dropdown";
+import Nav from "react-bootstrap/Nav";
 
 const AddEditClient = () => {
   const [rut, setRut] = useState("");
@@ -61,7 +65,7 @@ const AddEditClient = () => {
 
     clientService
       .create(client)
-      .then((response) => {
+      .then(() => {
         setNotification({ open: true, message: "Cuenta creada exitosamente.", severity: "success" });
         setTimeout(() => navigate("/home/Client"), 2000); // Redirigir después de 2 segundos
       })
@@ -95,87 +99,103 @@ const AddEditClient = () => {
   }, [id]);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" component="form" onSubmit={saveClient}>
-      <h3>{titleForm}</h3>
-      <hr />
-      <FormControl fullWidth>
-        <TextField label="Rut" type="number" value={rut} variant="standard" onChange={(e) => setRut(e.target.value)} helperText="Ej. 12587698" />
-      </FormControl>
+    <>
+      <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
+        <Container>
+          <Dropdown>
+            <Dropdown.Toggle variant="dark" id="dropdown-basic" className="burger-menu">
+              <span className="navbar-toggler-icon"></span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => navigate('/client/add')}>Crear Cuenta</Dropdown.Item>
+              <Dropdown.Item onClick={() => navigate('/client/Histori/add')}>Depositar/Retirar</Dropdown.Item>
+              <Dropdown.Item onClick={() => navigate('/client/TotalCost')}>Costo Total Préstamo</Dropdown.Item>
+              <Dropdown.Item onClick={() => navigate('/client/simulate')}>Simular Crédito</Dropdown.Item>
+              <Dropdown.Item onClick={() => navigate('/client/Request')}>Solicitar Préstamo</Dropdown.Item>
+              <Dropdown.Item onClick={() => navigate('/client/Follow')}>Seguimiento Solicitud</Dropdown.Item>
+              <Dropdown.Item onClick={() => navigate('/home/Ejecutivo')}>¿Eres un ejecutivo? Presiona aquí</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <Navbar.Brand href="#home">Cliente - PrestaFacil</Navbar.Brand>
+        </Container>
+      </Navbar>
 
-      <FormControl fullWidth>
-        <TextField label="Email" value={email} variant="standard" onChange={(e) => setEmail(e.target.value)} />
-      </FormControl>
-
-      <FormControl fullWidth>
-        <TextField label="Contraseña" type="password" value={password} variant="standard" onChange={(e) => setPassword(e.target.value)} />
-      </FormControl>
-
-      <FormControl fullWidth>
-        <TextField label="Nombre" value={firstName} variant="standard" onChange={(e) => setFirstName(e.target.value)} />
-      </FormControl>
-
-      <FormControl fullWidth>
-        <TextField label="Apellido" value={lastname} variant="standard" onChange={(e) => setLastName(e.target.value)} />
-      </FormControl>
-
-      <FormControl fullWidth>
-        <TextField label="Edad" type="number" value={age} variant="standard" onChange={(e) => setAge(e.target.value)} />
-      </FormControl>
-
-      <FormControl fullWidth>
-        <TextField
-          label="Salario"
-          type="number"
-          value={salary}
-          variant="standard"
-          onChange={(e) => setSalary(e.target.value)}
-          helperText="Salario mensual en pesos"
-        />
-      </FormControl>
-
-      <FormControl fullWidth>
-        <TextField
-          label="Antigüedad laboral"
-          type="number"
-          value={jobTenure}
-          variant="standard"
-          onChange={(e) => setJobTenure(e.target.value)}
-        />
-      </FormControl>
-
-      <FormControl fullWidth>
-        <TextField
-          label="¿Está en Dicom?"
-          select
-          variant="standard"
-          value={dicom ? "Sí" : "No"}
-          onChange={(e) => setDicom(e.target.value === "Sí")}
-        >
-          <MenuItem value={"Sí"}>Sí</MenuItem>
-          <MenuItem value={"No"}>No</MenuItem>
-        </TextField>
-      </FormControl>
-
-      <FormControl>
-        <Button type="submit" variant="contained" color="info" startIcon={<SaveIcon />}>
-          Grabar
-        </Button>
-      </FormControl>
-      <hr />
-      <Link to="/home/Client">Volver a la lista</Link>
-
-      {/* Notificación de feedback */}
-      <Snackbar
-        open={notification.open}
-        autoHideDuration={6000}
-        onClose={handleCloseNotification}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        component="form"
+        onSubmit={saveClient}
+        mt={8}
       >
-        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: "100%" }}>
-          {notification.message}
-        </Alert>
-      </Snackbar>
-    </Box>
+        <h3>{titleForm}</h3>
+        <hr />
+        <FormControl fullWidth>
+          <TextField label="Rut" type="number" value={rut} variant="standard" onChange={(e) => setRut(e.target.value)} helperText="Ej. 12587698" />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField label="Email" value={email} variant="standard" onChange={(e) => setEmail(e.target.value)} />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField label="Contraseña" type="password" value={password} variant="standard" onChange={(e) => setPassword(e.target.value)} />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField label="Nombre" value={firstName} variant="standard" onChange={(e) => setFirstName(e.target.value)} />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField label="Apellido" value={lastname} variant="standard" onChange={(e) => setLastName(e.target.value)} />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField label="Edad" type="number" value={age} variant="standard" onChange={(e) => setAge(e.target.value)} />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField label="Salario" type="number" value={salary} variant="standard" onChange={(e) => setSalary(e.target.value)} helperText="Salario mensual en pesos" />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField label="Antigüedad laboral" type="number" value={jobTenure} variant="standard" onChange={(e) => setJobTenure(e.target.value)} />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField
+            label="¿Está en Dicom?"
+            select
+            variant="standard"
+            value={dicom ? "Sí" : "No"}
+            onChange={(e) => setDicom(e.target.value === "Sí")}
+          >
+            <MenuItem value={"Sí"}>Sí</MenuItem>
+            <MenuItem value={"No"}>No</MenuItem>
+          </TextField>
+        </FormControl>
+
+        <FormControl>
+          <Button type="submit" variant="contained" color="info" startIcon={<SaveIcon />}>
+            Grabar
+          </Button>
+        </FormControl>
+        <hr />
+        <Link to="/home/Client">Volver a la lista</Link>
+
+        <Snackbar
+          open={notification.open}
+          autoHideDuration={6000}
+          onClose={handleCloseNotification}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: "100%" }}>
+            {notification.message}
+          </Alert>
+        </Snackbar>
+      </Box>
+    </>
   );
 };
 
